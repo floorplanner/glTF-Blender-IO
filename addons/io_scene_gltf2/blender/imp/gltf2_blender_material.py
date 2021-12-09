@@ -54,7 +54,18 @@ class BlenderMaterial():
         elif 'KHR_materials_pbrSpecularGlossiness' in exts:
             pbr_specular_glossiness(mh)
         else:
-            pbr_metallic_roughness(mh)
+            transmission_factor = 0.0
+            ior = 1.45
+            if 'KHR_materials_transmission' in exts:
+                print(exts['KHR_materials_transmission'])
+                if 'transmissionFactor' in exts['KHR_materials_transmission']:
+                    transmission_factor = exts['KHR_materials_transmission']['transmissionFactor']
+                    print('KHR_materials_transmission: %0.2f' % transmission_factor)
+            if 'KHR_materials_ior' in exts:
+                if 'ior' in exts['KHR_materials_ior']:
+                    ior = exts['KHR_materials_ior']['ior']
+                    print('KHR_materials_ior: %0.2f' % ior)
+            pbr_metallic_roughness(mh, transmission_factor, ior)
 
     @staticmethod
     def set_double_sided(pymaterial, mat):

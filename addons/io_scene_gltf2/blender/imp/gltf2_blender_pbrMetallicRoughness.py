@@ -43,7 +43,7 @@ class MaterialHelper:
         )
 
 
-def pbr_metallic_roughness(mh: MaterialHelper):
+def pbr_metallic_roughness(mh: MaterialHelper, transmission_factor, ior):
     """Creates node tree for pbrMetallicRoughness materials."""
     pbr_node = mh.node_tree.nodes.new('ShaderNodeBsdfPrincipled')
     pbr_node.location = 10, 300
@@ -55,6 +55,9 @@ def pbr_metallic_roughness(mh: MaterialHelper):
         make_emission_socket=False,
         make_alpha_socket=False,
     )
+
+    pbr_node.inputs['IOR'].default_value = ior
+    pbr_node.inputs['Transmission'].default_value = min(transmission_factor, 0.96)
 
     locs = calc_locations(mh)
 
